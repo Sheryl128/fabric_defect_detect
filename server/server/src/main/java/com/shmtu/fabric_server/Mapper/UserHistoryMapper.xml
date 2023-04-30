@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shmtu.fabric_server.Mapper.UserHistoryMapper">
+    <select id="getHistory" resultType="UserHistory">
+        select * from history where uId=#{uId}
+    </select>
+    <insert id="setHistory" parameterType="com.shmtu.fabric_server.Pojo.UserHistory">
+        insert into history set
+                                   historyId=#{historyId},uId=#{uId},time=#{time},inputPath=#{inputPath},outPath=#{outPath},
+                                   fileName=#{fileName};
+    </insert>
+
+    <select id="getHistoryByHid" resultType="UserHistory">
+        select * from history where historyId=#{historyId}
+    </select>
+</mapper>

@@ -1,0 +1,19 @@
+server:
+  port: 8081
+  tomcat:
+    max-http-form-post-size: -1
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 30MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fabric?useunicode=true&allowMultiQueries=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 19991208
+    type: com.alibaba.druid.pool.DruidDataSource
+mybatis:
+  mapper-locations: classpath:Mapper/*.xml
+  type-aliases-package: com.shmtu.fabric_server.Pojo

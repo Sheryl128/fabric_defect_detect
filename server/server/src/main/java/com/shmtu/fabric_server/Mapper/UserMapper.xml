@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shmtu.fabric_server.Mapper.UserMapper">
+    <select id="login" resultType="User">
+        select * from user where uId=#{uId};
+    </select>
+    <insert id="register" parameterType="com.shmtu.fabric_server.Pojo.User">
+        insert into user set uId=#{uId}, username=#{username}, pwd=#{pwd};
+    </insert>
+
+</mapper>
