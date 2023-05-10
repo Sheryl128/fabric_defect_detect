@@ -15,6 +15,7 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.python.jline.console.history.History;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
@@ -68,7 +69,10 @@ public class PictureUpload {
     @RequestMapping("/download/{hid}")
     public String download(HttpServletResponse response, @PathVariable String hid) throws IOException, InterruptedException {
         // 根据hid反查数据库获取地址
-        String outPath = hs.getHistoryByHid(hid).getOutPath();
+        UserHistory h = new UserHistory();
+        h = hs.getHistoryByHid(hid);
+        String outPath = h.getOutPath();
+        String fileName = h.getFileName();
         // 地址拼接
         String outputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/output/" + outPath;
 
@@ -80,7 +84,7 @@ public class PictureUpload {
             response.setContentType("image/png");
 
             int len = 0;
-            byte[] bytes = new byte[3000 * 3000];
+            byte[] bytes = new byte[4096 * 4096];
             while ((len=fileInputStream.read(bytes))!=-1){
                 outputStream.write(bytes,0,len);
                 outputStream.flush();
@@ -92,7 +96,7 @@ public class PictureUpload {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return tool.toJson(new RespBean(200, "success"));
+        return null;
     }
 
     @RequestMapping("/show/{uid}")

@@ -25,10 +25,10 @@ public class UserController {
     public String login(@RequestBody User user) throws JsonProcessingException {
         RespBean res = new RespBean();
         try {
-            User newUser = us.login(user.getuId());
+            User newUser = us.login(user.getUserName());
             if(user.getPwd().equals(newUser.getPwd())){
                 res.setStatus(200);
-                res.setMsg(user.getuId());
+                res.setMsg(newUser.getuId());
                 return tool.toJson(res);
             }
         }catch (Exception e){
@@ -42,6 +42,7 @@ public class UserController {
     @RequestMapping("/register")
     public String register(@RequestBody User respUser) throws JsonProcessingException {
         User user = new User(UUID.randomUUID().toString(), respUser.getUserName(), respUser.getPwd());
+        System.out.println(user.getuId());
         us.register(user);
         RespBean res = new RespBean(200, "success");
         return tool.toJson(res);

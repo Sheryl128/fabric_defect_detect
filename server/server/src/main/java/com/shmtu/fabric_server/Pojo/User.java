@@ -1,18 +1,15 @@
 package com.shmtu.fabric_server.Pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private String uId;
     private String userName;
     private String pwd;
 
-    public User() {
-    }
-
-    public User(String uId, String userName, String pwd) {
-        this.uId = uId;
-        this.userName = userName;
-        this.pwd = pwd;
-    }
 
     public String getuId() {
         return uId;

@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
-    User login(@Param("uId") String uId);
+    User login(@Param("userName") String userName);
     int register(User user);
 }
