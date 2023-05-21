@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-header style="padding: 0; margin-top: 20px;">
-        <span style="font: 25px large;padding-left: 150px;padding-top: 30px;position: relative;">系统</span>
+        <span style="font: 25px large;padding-left: 150px;padding-top: 30px;position: relative;">Fabric Defect Detect System</span>
         <div v-if="session === null"  style="display: inline">
           <span style="margin: 10px 0 0 900px;font: 15px small;">
             <a style="text-decoration: none; color: black;">
@@ -22,7 +22,7 @@
           </el-menu-item>
           <el-menu-item index="3" style="color: white;width: 150px;text-align: center;">
             <span v-if="session === null"  @click="pleaseLogin">下载</span>
-            <router-link v-else to="/manage">关于自己</router-link>
+            <router-link v-else to="/manage">下载</router-link>
           </el-menu-item>
         </el-menu>
       </el-header>

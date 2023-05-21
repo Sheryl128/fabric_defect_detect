@@ -44,11 +44,12 @@ public class PictureUpload {
     @RequestMapping("/upload/{uId}")
     @ResponseBody
     public String upload(@RequestParam("pic") MultipartFile file, @PathVariable("uId") String username) throws IOException, InterruptedException {
+        System.out.println("=====success=====");
         String fileName = file.getOriginalFilename();
         String newFileName = username + UUID.randomUUID() + fileName;
         String inputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/input/" + newFileName;
         String outputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/output/" + newFileName;
-
+        System.out.println(inputPath);
         File dest = new File(inputPath);
         file.transferTo(dest);
         try {
@@ -81,7 +82,7 @@ public class PictureUpload {
             FileInputStream fileInputStream = new FileInputStream(outputPath);
             //输出流，通过输出流将文件写回浏览器
             ServletOutputStream outputStream = response.getOutputStream();
-            response.setContentType("image/png");
+            response.setContentType("image/jpg");
 
             int len = 0;
             byte[] bytes = new byte[4096 * 4096];
@@ -103,5 +104,75 @@ public class PictureUpload {
     public String showHistory(@PathVariable String uid) throws IOException, InterruptedException {
         List<UserHistory> list = hs.getHistory(uid);
         return tool.toJson(list);
+    }
+
+    @RequestMapping("/generate/{uid}")
+    public String generate(HttpServletResponse response, @PathVariable String uid, @RequestBody UserHistory uh) throws IOException, InterruptedException {
+        String inputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/input/" + uh.getFileName() + ".png";
+
+        try {
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+            String urlNameString = "http://127.0.0.1:5000/gen" + "/" + uh.getFileName();
+            HttpGet get = new HttpGet(urlNameString);
+            CloseableHttpResponse r = httpClient.execute(get);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(inputPath);
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("image/png");
+
+            int len = 0;
+            byte[] bytes = new byte[4096 * 4096];
+            while ((len=fileInputStream.read(bytes))!=-1){
+                outputStream.write(bytes,0,len);
+                outputStream.flush();
+            }
+            //关闭资源
+            outputStream.close();
+            fileInputStream.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping("/testdetect")
+    public String testDetect(HttpServletResponse response, @RequestBody UserHistory uh) throws IOException, InterruptedException {
+        String inputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/input/" + uh.getFileName() + ".png";
+        String outputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/output/" + uh.getFileName() + ".png";
+        try {
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+            String urlNameString = "http://127.0.0.1:5000/low2high" + "/" + uh.getFileName() + ".png" + "/" + uh.getFileName() + ".png";;
+            HttpGet get = new HttpGet(urlNameString);
+            CloseableHttpResponse r = httpClient.execute(get);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(outputPath);
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("image/png");
+
+            int len = 0;
+            byte[] bytes = new byte[4096 * 4096];
+            while ((len=fileInputStream.read(bytes))!=-1){
+                outputStream.write(bytes,0,len);
+                outputStream.flush();
+            }
+            //关闭资源
+            outputStream.close();
+            fileInputStream.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        File f1 = new File(inputPath);
+        f1.delete();
+        File f2 = new File(outputPath);
+        f2.delete();
+        return null;
     }
 }

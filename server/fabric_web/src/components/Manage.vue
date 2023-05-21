@@ -74,18 +74,18 @@ import axios from "axios";
           const m = date.getMinutes();
           return (Y+M+D+h+m);
         },
-        search(){
-          axios.post('/order/querySearchPageNum',{
-            userName: this.userName
-          }).then(response=>{
-            this.totalPage =  response.data;
-          });
-          axios.post('/order/searchOrder/1',{
-            userName: this.userName
-          }).then(response=>{
-            this.tableData = response.data;
-          })
-        },
+        // search(){
+        //   axios.post('/order/querySearchPageNum',{
+        //     userName: this.userName
+        //   }).then(response=>{
+        //     this.totalPage =  response.data;
+        //   });
+        //   axios.post('/order/searchOrder/1',{
+        //     userName: this.userName
+        //   }).then(response=>{
+        //     this.tableData = response.data;
+        //   })
+        // },
 
         download(row){
           axios.post('/picture/download/' + row.historyId,{},{responseType: 'blob'}).then(response=>{
