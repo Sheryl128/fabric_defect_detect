@@ -24,21 +24,14 @@ import java.util.Properties;
 
 public class tt {
 
-    @Test
-    public void jythonTest() throws IOException {
-        try {
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            String urlNameString = "http://127.0.0.1:5000/low2high" + "/" + "xyc4a97291a-d31c-4c1b-bc82-a303048de7961.png" + "/" + "xyc4a97291a-d31c-4c1b-bc82-a303048de7961.png";
-            HttpGet get = new HttpGet(urlNameString);
-            CloseableHttpResponse response = httpClient.execute(get);
-            // 获取所有响应头字段
-        } catch(Exception e) {
-            System.out.println("发送GET请求出现异常！" + e);
-            e.printStackTrace();
-        }
-    }
+
     @Test
     public void ttTest() throws IOException {
+        System.out.println(new Date());
+    }
+
+    @Test
+    public void ttTest1() throws IOException {
         System.out.println(new Date());
     }
 }

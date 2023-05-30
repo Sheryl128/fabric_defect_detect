@@ -43,10 +43,22 @@ public class PictureUpload {
 
     @RequestMapping("/upload/{uId}")
     @ResponseBody
-    public String upload(@RequestParam("pic") MultipartFile file, @PathVariable("uId") String username) throws IOException, InterruptedException {
+    public String upload(@RequestParam("pic") MultipartFile file, @PathVariable("uId") String uid) throws IOException, InterruptedException {
+        if(file == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("file is empty");
+            return tool.toJson(res);
+        }
+        if(uid == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("id is empty");
+            return tool.toJson(res);
+        }
         System.out.println("=====success=====");
         String fileName = file.getOriginalFilename();
-        String newFileName = username + UUID.randomUUID() + fileName;
+        String newFileName = uid + UUID.randomUUID() + fileName;
         String inputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/input/" + newFileName;
         String outputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/output/" + newFileName;
         System.out.println(inputPath);
@@ -62,16 +74,28 @@ public class PictureUpload {
         }
         // 这里需要更新数据库
         String hId = UUID.randomUUID().toString();
-        UserHistory uh = new UserHistory(hId, username, new Date(), newFileName, newFileName, fileName);
+        UserHistory uh = new UserHistory(hId, uid, new Date(), newFileName, newFileName, fileName);
         hs.setHistory(uh);
         return tool.toJson(new RespBean(200, "success"));
     }
 
     @RequestMapping("/download/{hid}")
     public String download(HttpServletResponse response, @PathVariable String hid) throws IOException, InterruptedException {
+        if(hid == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("history id is empty");
+            return tool.toJson(res);
+        }
         // 根据hid反查数据库获取地址
         UserHistory h = new UserHistory();
         h = hs.getHistoryByHid(hid);
+        if(h == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("file is not exist");
+            return tool.toJson(res);
+        }
         String outPath = h.getOutPath();
         String fileName = h.getFileName();
         // 地址拼接
@@ -102,12 +126,25 @@ public class PictureUpload {
 
     @RequestMapping("/show/{uid}")
     public String showHistory(@PathVariable String uid) throws IOException, InterruptedException {
+        if(uid == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("user id is empty");
+            return tool.toJson(res);
+        }
         List<UserHistory> list = hs.getHistory(uid);
         return tool.toJson(list);
     }
 
     @RequestMapping("/generate/{uid}")
     public String generate(HttpServletResponse response, @PathVariable String uid, @RequestBody UserHistory uh) throws IOException, InterruptedException {
+        if(uh.getFileName() == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("filename is empty");
+            return tool.toJson(res);
+        }
+
         String inputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/input/" + uh.getFileName() + ".png";
 
         try {
@@ -141,11 +178,18 @@ public class PictureUpload {
 
     @RequestMapping("/testdetect")
     public String testDetect(HttpServletResponse response, @RequestBody UserHistory uh) throws IOException, InterruptedException {
+        if(uh.getFileName() == null){
+            RespBean res = new RespBean();
+            res.setStatus(500);
+            res.setMsg("filename is empty");
+            return tool.toJson(res);
+        }
+
         String inputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/input/" + uh.getFileName() + ".png";
         String outputPath = "/Users/mete0r/Documents/fabric_defect_detect/fabric_defect_detect/server/server/src/main/resources/static/output/" + uh.getFileName() + ".png";
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            String urlNameString = "http://127.0.0.1:5000/low2high" + "/" + uh.getFileName() + ".png" + "/" + uh.getFileName() + ".png";;
+            String urlNameString = "http://127.0.0.1:5000/low2high" + "/" + uh.getFileName() + ".png" + "/" + uh.getFileName() + ".png";
             HttpGet get = new HttpGet(urlNameString);
             CloseableHttpResponse r = httpClient.execute(get);
         }catch (Exception e){

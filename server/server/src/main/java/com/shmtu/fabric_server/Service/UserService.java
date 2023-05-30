@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
     @Autowired
     UserMapper um;
 
-    public User login(String uId){
-        return um.login(uId);
+    public User login(String userName){
+        return um.login(userName);
     }
 
     public int register(User user){
